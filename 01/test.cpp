@@ -1,18 +1,6 @@
 #include <iostream>
 #include <cstdio>
-
-class Allocator
-{
-    size_t max_size;
-    size_t offset;
-    char *pointer;
-public:
-    Allocator();
-    void makeAllocator(size_t maxSize);
-    char* alloc(size_t size);
-    void reset();
-    ~Allocator();
-};
+#include "alloc.h"
 
 void Test1()
 {
@@ -63,12 +51,20 @@ void Test4()
     Alloc.makeAllocator(10);
 }
 
+void Test5()
+{
+    Allocator Alloc;
+    char *tmp = Alloc.alloc(6);
+    assert(tmp == nullptr);
+}
+
 int main()
 {
     Test1();
     Test2();
     Test3();
     Test4();
+    Test5();
     
     std::cout << "Success!\n";
 
