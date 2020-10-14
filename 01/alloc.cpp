@@ -1,18 +1,6 @@
 #include <iostream>
 #include <cstdio>
-
-class Allocator
-{
-    size_t max_size;
-    size_t offset;
-    char *pointer;
-public:
-    Allocator();
-    void makeAllocator(size_t maxSize);
-    char* alloc(size_t size);
-    void reset();
-    ~Allocator();
-};
+#include "alloc.h"
 
 Allocator::Allocator() {
     max_size = 0;
@@ -30,11 +18,15 @@ void Allocator::makeAllocator(size_t maxSize) {
 }
 
 char* Allocator::alloc(size_t size) {
+    if(!pointer) {
+        std::cout << "Need to call MakeAllocator first!" << std::endl;
+        return nullptr;
+    }
     if(max_size - offset < size) {
         return nullptr;
     }
     offset += size;
-    return pointer + offset;
+    return pointer + offset - size;
 }
 
 void Allocator::reset() {
@@ -44,3 +36,5 @@ void Allocator::reset() {
 Allocator::~Allocator() {
     delete [] pointer;
 }
+
+
