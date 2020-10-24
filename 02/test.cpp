@@ -7,12 +7,12 @@
 std::stringstream ss;
 std::stringstream ss2;
 
-void foo1(long long i)
+void foo1(long long &i)
 {
     ss << " digit " << i;
 }
 
-void foo2(std::string i)
+void foo2(const std::string &i)
 {
     ss << " string " << i;
 }
@@ -27,12 +27,12 @@ void foo4()
     ss << " end";
 }
 
-void foo5(long long i)
+void foo5(long long &i)
 {
     ss2 << i * i << " ";
 }
 
-void foo6(std::string i)
+void foo6(const std::string &i)
 {
     ss2 << i + "a ";
 }
