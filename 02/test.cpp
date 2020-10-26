@@ -7,7 +7,7 @@
 std::stringstream ss;
 std::stringstream ss2;
 
-void foo1(long long &i)
+void foo1(long long i)
 {
     ss << " digit " << i;
 }
@@ -27,7 +27,7 @@ void foo4()
     ss << " end";
 }
 
-void foo5(long long &i)
+void foo5(long long i)
 {
     ss2 << i * i << " ";
 }
