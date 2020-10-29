@@ -84,6 +84,27 @@ void Test5() {
     assert(row3 == "10 11 12 13 14 ");
 }
 
+void Test6() {
+    Matrix m(3,5);
+    for (size_t i = 0; i < m.getRows(); ++i) {
+        for (size_t j = 0; j < m.getColumns(); ++j) {
+            m[i][j] = 1;
+        }
+    }
+    Matrix m2 = m;
+    m2 *= 3;
+    Matrix m3(3,5);
+    for (size_t i = 0; i < m3.getRows(); ++i) {
+        for (size_t j = 0; j < m3.getColumns(); ++j) {
+            m3[i][j] = 3;
+        }
+    }
+    assert(m2 == m3);
+    Matrix m4(4,6);
+    m4 = m2;
+    assert(m4 == m3);
+}
+
 int main()
 {
     Test1();
@@ -91,6 +112,7 @@ int main()
     Test3();
     Test4();
     Test5();
+    Test6();
     
     std::cout << "Success!\n";
     return 0;
