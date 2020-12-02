@@ -89,13 +89,12 @@ private:
     {
         std::string text;
         in_ >> text;
-        char *endptr;
-        uint64_t tmp = strtoull(text.c_str(), &endptr, 10);
-        if(*endptr != '\0') {
+        try {
+            uint64_t tmp = std::stoull(text);
+            val = tmp;
+        } catch (std::exception) {
             return Error::CorruptedArchive;
         }
-        val = tmp;
-
         return Error::NoError;
     }
 

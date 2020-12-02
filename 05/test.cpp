@@ -71,7 +71,7 @@ void Test3() {
     
     Serializer serializer(stream);
     serializer.save(x);
-    stream << "2 av";
+    stream << "2 true 333333333333333333333";
     Data y { 0, false, 0 };
     Deserializer deserializer(stream);
     const Error err = deserializer.load(y);
