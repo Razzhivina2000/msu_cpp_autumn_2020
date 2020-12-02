@@ -1,12 +1,5 @@
 #include <iostream>
-#include <vector>
-#include <mutex>
-#include <future>
-#include <queue>
-#include <condition_variable>
-#include <unistd.h>
 #include "ThreadPool.h"
-
 
 struct A {};
 
