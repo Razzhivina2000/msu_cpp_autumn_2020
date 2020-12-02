@@ -88,28 +88,72 @@ vector<T, Alloc>::vector(size_t count, const T& defaultValue) : size_(count), ca
 }
 
 template < class T, class Alloc >
-vector<T, Alloc>::vector(const vector<T> &other) : size_(other.size), capacity_(other.capacity) {
-    data_ = Alloc().allocate(other.capacity);
-    for(int i = 0; i < other.size; i++) {
-        data_[i] = other[i];
-    }
-}
-
-template < class T, class Alloc >
 vector<T, Alloc>::vector(std::initializer_list<T> values) :
-    capacity_(values.size()), size_(values.size())
+    size_(values.size()), capacity_(values.size())
 {
     data_ = Alloc().allocate(values.size());
     std::copy(values.begin(), values.end(), data_);
 }
 
 template < class T, class Alloc >
+vector<T, Alloc>::vector(const vector<T>& other) : size_(other.size_), capacity_(other.capacity_) {
+    data_ = Alloc().allocate(other.capacity_);
+    for(size_t i = 0; i < other.size_; i++) {
+        data_[i] = other[i];
+    }
+}
+
+template < class T, class Alloc >
+vector<T, Alloc>::vector(vector<T>&& other) : size_(other.size_), capacity_(other.capacity_), data_(other.data_) {
+    other.size_ = 0;
+    other.capacity_ = 0;
+    other.data_ = nullptr;
+}
+
+template < class T, class Alloc >
+vector<T>& vector<T, Alloc>::operator=(const vector<T>& other) {
+    if(this == &other) {
+        return *this;
+    }
+    Alloc().deallocate(data_);
+    size_ = other.size_;
+    capacity_ = other.capacity_;
+    data_ = Alloc().allocate(capacity_);
+    for(size_t i = 0; i < other.size_; i++) {
+        data_[i] = other[i];
+    }
+    return *this;
+}
+
+template < class T, class Alloc >
+vector<T>& vector<T, Alloc>::operator=(vector<T>&& other) {
+    if(this == &other) {
+        return *this;
+    }
+    Alloc().deallocate(data_);
+    size_ = other.size_;
+    capacity_ = other.capacity_;
+    data_ = other.data_;
+    other.size_ = 0;
+    other.capacity_ = 0;
+    other.data_ = nullptr;
+    
+    return *this;
+}
+
+template < class T, class Alloc >
 T& vector<T, Alloc>::operator[](size_t pos) {
+    if(pos >= size_) {
+        throw std::out_of_range("Vector::operator[]");
+    }
     return data_[pos];
 }
 
 template < class T, class Alloc >
 const T& vector<T, Alloc>::operator[](size_t pos) const {
+    if(pos >= size_) {
+        throw std::out_of_range("Vector::operator[]");
+    }
     return data_[pos];
 };
 
@@ -129,7 +173,7 @@ void vector<T, Alloc>::pop_back() {
 template < class T, class Alloc >
 template < class... Args >
 void vector<T, Alloc>::emplace_back(Args&&... args) {
-    push_back(T(args...));
+    push_back(T(std::forward<Args>(args)...));
 }
 
 template < class T, class Alloc >
@@ -183,7 +227,7 @@ void vector<T, Alloc>::reserve(size_t count) {
     if(count > capacity_) {
         T* tmp = Alloc().allocate(count);
         for(int i = 0; i < size_; i++) {
-            tmp[i] = data_[i];
+            tmp[i] = std::move(data_[i]);
         }
         Alloc().deallocate(data_);
         capacity_ = count;

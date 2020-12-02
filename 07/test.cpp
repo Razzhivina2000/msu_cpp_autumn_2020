@@ -3,7 +3,10 @@
 #include "vector.h"
 
 void Test1() {
-    vector<int> data1 = { 9, 8, 1, 3, 6, 5, 6 };
+    vector<int> data2 = { 9, 8, 1, 3, 6, 5, 6 };
+    vector<int> data3{data2};
+    vector<int> data1(5, 0);
+    data1 = std::move(data3);
     assert(data1.size() == 7);
     assert(data1.capacity() == 7);
     data1.reserve(60);
@@ -17,7 +20,10 @@ void Test1() {
 }
 
 void Test2() {
-    vector<int> data2 = { 9, 8, 1, 3, 6, 5, 6 };
+    vector<int> data1 = { 9, 8, 1, 3, 6, 5, 6 };
+    vector<int> data3{std::move(data1)};
+    vector<int> data2;
+    data2 = data3;
     assert(data2[3] == 3);
     int a = 10;
     data2.push_back(a);

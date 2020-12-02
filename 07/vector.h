@@ -48,8 +48,8 @@ public:
 template < class T, class Alloc = allocator<T> >
 class vector {
     
-    size_t capacity_ = 0;
     size_t size_ = 0;
+    size_t capacity_ = 0;
     T* data_ = nullptr;
     
 public:
@@ -64,9 +64,15 @@ public:
     
     vector(size_t count, const T& defaultValue);
     
+    vector(std::initializer_list<T> values);
+    
     vector(const vector<T> &other);
     
-    vector(std::initializer_list<T> values);
+    vector(vector<T>&& other);
+    
+    vector<T>& operator=(const vector<T>& other);
+    
+    vector<T>& operator=(vector<T>&& other);
     
     T& operator[](size_t pos);
     
