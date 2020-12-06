@@ -92,7 +92,9 @@ private:
         try {
             uint64_t tmp = std::stoull(text);
             val = tmp;
-        } catch (std::exception) {
+        } catch (const std::invalid_argument&) {
+            return Error::CorruptedArchive;
+        } catch (const std::out_of_range&) {
             return Error::CorruptedArchive;
         }
         return Error::NoError;
