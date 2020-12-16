@@ -9,8 +9,6 @@ struct Error
     Error(const std::string& str) : message(str) {}
 };
 
-std::stringstream ss_error;
-
 std::string f(const std::string &str, const std::vector<std::string> &args) {
     std::string res = "";
     std::string num = "";
@@ -19,7 +17,7 @@ std::string f(const std::string &str, const std::vector<std::string> &args) {
     int k = args.size();
     for (size_t i = 0; i < len; ++i) {
         if(p) {
-            if (str[i] >= '0' && str[i] <= '9') {
+            if (isdigit(str[i])) {
                 num += str[i];
             } else if (str[i] == '}') {
                 if(num == "") {
@@ -55,7 +53,7 @@ std::string f(const std::string &str, const std::vector<std::string> &args) {
 }
 
 template<class Arg>
-std::string to_string(Arg&& arg)
+std::string to_string(const Arg& arg)
 {
     std::stringstream ss;
     ss << arg;
@@ -63,21 +61,21 @@ std::string to_string(Arg&& arg)
 }
 
 template<class Arg, class... Args>
-inline std::string f(const std::string& str, std::vector<std::string>& arguments, Arg&& arg, Args&& ... args) {
-    arguments.push_back(to_string(std::forward<Arg>(arg)));
-    return f(str, arguments, std::forward<Args>(args)...);
+inline std::string f(const std::string& str, std::vector<std::string>& arguments, const Arg& arg, const Args&... args) {
+    arguments.push_back(to_string(arg));
+    return f(str, arguments, args...);
 }
 
 template<class Arg, class... Args>
-std::string format(const std::string& str, Arg&& arg, Args&&... args) {
+std::string format(const std::string& str, const Arg& arg, const Args&... args) {
     std::vector<std::string> arguments;
     std::string result;
     try {
-        result = f(str, arguments, std::forward<Arg>(arg), std::forward<Args>(args)...);
+        result = f(str, arguments, arg, args...);
     }
     catch (const Error &e)
     {
-        ss_error << e.message << std::endl;
+        throw e;
     }
     return result;
 }

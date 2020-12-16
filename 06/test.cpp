@@ -1,6 +1,8 @@
 #include <iostream>
 #include "format.h"
 
+std::stringstream ss_error;
+
 void Test1() {
     assert(format("{1}+{1} = {0}", 2, "one") == "one+one = 2");
     std::stringstream ss;
@@ -12,13 +14,25 @@ void Test1() {
 
 void Test2() {
     std::string s;
-    s = format("{0} {1} {2} {3} {4}", 1, 2, 3, 4);
+    try {
+        s = format("{0} {1} {2} {3} {4}", 1, 2, 3, 4);
+    } catch (const Error &e) {
+        ss_error << e.message << std::endl;
+    }
     getline(ss_error, s);
     assert(s == "IndexError: index out of range");
-    s = format("{0}{12", 1);
+    try {
+        s = format("{0}{12", 1);
+    } catch (const Error &e) {
+        ss_error << e.message << std::endl;
+    }
     getline(ss_error, s);
     assert(s == "FormatError: String is invalid");
-    s = format("{11111111111111111111111111}", 1);
+    try {
+        s = format("{11111111111111111111111111}", 1);
+    } catch (const Error &e) {
+        ss_error << e.message << std::endl;
+    }
     getline(ss_error, s);
     assert(s == "IndexError: index out of range");
 }
